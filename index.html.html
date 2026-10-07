@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Perfil Nutrição — Monitoria de NC2</title>
+<style>
+:root{
+  --ink:#151515; --paper:#f7f6f2; --paper2:#eeece6; --line:#d5d2ca;
+  --accent:#e84545; --accent2:#1f7a63; --muted:#68665f; --white:#fff;
+  --shadow:0 16px 45px rgba(0,0,0,.10);
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:Arial,Helvetica,sans-serif;color:var(--ink);background:#dcdad4}
+body{
+  background:
+    radial-gradient(circle at 20% 20%,rgba(0,0,0,.035) 0 1px,transparent 1.5px),
+    radial-gradient(circle at 70% 65%,rgba(0,0,0,.025) 0 1px,transparent 1.5px),
+    linear-gradient(115deg,#f4f3ef,#e8e6df);
+  background-size:5px 5px,7px 7px,100% 100%;
+}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.app{min-height:100vh}
+.topbar{
+  position:sticky;top:0;z-index:50;background:rgba(247,246,242,.94);
+  backdrop-filter:blur(12px);border-bottom:1px solid var(--line);
+  display:flex;align-items:center;justify-content:space-between;padding:13px 22px;
+}
+.brand{display:flex;align-items:center;gap:14px;min-width:0}
+.brandmark{font-family:Georgia,serif;font-weight:900;font-size:29px;letter-spacing:-2px;text-shadow:2px 2px 0 #fff}
+.brand small{display:block;color:var(--muted);font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.nav{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.nav button,.btn{
+  border:1px solid #c9c6bf;background:#fff;border-radius:12px;padding:9px 13px;font-weight:800;
+  transition:.18s transform,.18s box-shadow,.18s background;
+}
+.nav button:hover,.btn:hover{transform:translateY(-1px);box-shadow:0 5px 16px rgba(0,0,0,.08)}
+.nav button.active,.btn.primary{background:var(--ink);color:#fff;border-color:var(--ink)}
+.btn.red{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn.green{background:var(--accent2);color:#fff;border-color:var(--accent2)}
+.btn.ghost{background:transparent}
+.btn.big{padding:13px 18px;font-size:16px}
+main{max-width:1240px;margin:0 auto;padding:30px 20px 70px}
+.hero{
+  min-height:430px;display:grid;grid-template-columns:1.15fr .85fr;gap:30px;align-items:center;
+  background:rgba(250,249,246,.76);border:1px solid #d2d0ca;border-radius:26px;padding:42px;
+  box-shadow:var(--shadow);overflow:hidden;position:relative;
+}
+.hero:before{content:"";position:absolute;inset:0;opacity:.22;pointer-events:none;background:
+  radial-gradient(circle at 10% 10%,#000 0 1px,transparent 1.5px);
+  background-size:7px 7px}
+.hero>*{position:relative}
+.kicker{font-weight:900;letter-spacing:.13em;text-transform:uppercase;color:#555}
+.hero h1{font-family:Georgia,serif;font-size:clamp(58px,8vw,108px);line-height:.8;margin:12px 0 8px;letter-spacing:-6px;text-shadow:3px 3px 0 #fff,-1px -1px 0 #000}
+.hero h2{font-size:24px;margin:0 0 18px;letter-spacing:.12em}
+.hero p{font-size:17px;line-height:1.55;max-width:650px}
+.hero-art{display:flex;justify-content:center;align-items:center}
+.card-stack{position:relative;width:300px;height:310px}
+.mini-card{position:absolute;width:190px;height:260px;border:3px solid #111;background:#f7f6f2;box-shadow:10px 14px 0 rgba(0,0,0,.08);border-radius:9px;padding:22px;font-family:Georgia,serif}
+.mini-card:nth-child(1){transform:rotate(-12deg);left:12px;top:24px}
+.mini-card:nth-child(2){transform:rotate(2deg);left:58px;top:5px}
+.mini-card:nth-child(3){transform:rotate(13deg);left:112px;top:32px}
+.mini-card .mc-top{font:900 11px Arial;letter-spacing:.1em}
+.mini-card .mc-title{font-size:34px;font-weight:900;margin-top:32px}
+.dots{display:flex;gap:6px;margin-top:18px}.dots i{width:10px;height:10px;border-radius:50%;background:#111;display:block}
+.section-title{display:flex;align-items:end;justify-content:space-between;gap:15px;margin:38px 0 18px}
+.section-title h2{margin:0;font-family:Georgia,serif;font-size:32px}
+.section-title p{margin:0;color:var(--muted)}
+.mode-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.mode{
+  background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px;min-height:150px;text-align:left;
+  box-shadow:0 8px 25px rgba(0,0,0,.05)
+}
+.mode h3{margin:8px 0;font-size:19px}.mode p{color:#666;line-height:1.4;margin:0}.mode .icon{font-size:30px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px}
+.stat{background:#fff;border:1px solid var(--line);padding:18px;border-radius:16px}.stat b{font:900 30px Georgia}.stat span{display:block;color:var(--muted);font-size:13px;margin-top:3px}
+.page-head{display:flex;justify-content:space-between;gap:18px;align-items:end;margin-bottom:22px}
+.page-head h1{font-family:Georgia,serif;font-size:42px;margin:0 0 5px}.page-head p{margin:0;color:var(--muted)}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+.search{flex:1;min-width:230px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:#fff;outline:none}
+.filters{display:flex;gap:7px;flex-wrap:wrap}.filter{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 12px;font-weight:800}.filter.active{background:#111;color:#fff}
+.card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.deck-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px;min-height:215px;display:flex;flex-direction:column;box-shadow:0 8px 22px rgba(0,0,0,.05);transition:.18s}
+.deck-card:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(0,0,0,.09)}
+.badge{display:inline-flex;align-self:flex-start;padding:6px 9px;border-radius:999px;background:#efede7;font-size:11px;font-weight:900;letter-spacing:.06em;text-transform:uppercase}
+.deck-card h3{font-family:Georgia,serif;font-size:25px;margin:17px 0 8px;line-height:1.05}
+.deck-card .macro{font-size:12px;color:var(--muted);font-weight:800}
+.deck-card .clue-count{margin-top:auto;padding-top:16px;color:#777;font-size:13px}
+.rules{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:18px;padding:23px;box-shadow:0 8px 22px rgba(0,0,0,.05)}
+.panel h3{margin:0 0 12px;font-family:Georgia,serif;font-size:24px}.panel p,.panel li{line-height:1.55}.panel ul,.panel ol{padding-left:21px}
+.score-table{width:100%;border-collapse:collapse}.score-table th,.score-table td{padding:10px;border-bottom:1px solid var(--line);text-align:left}.score-table th{background:#f2f1ed}
+.game-shell{display:grid;grid-template-columns:1fr 310px;gap:18px}
+.game-main{min-width:0}
+.game-card{
+  background:#fff;border:2px solid #111;border-radius:22px;min-height:560px;padding:30px;box-shadow:var(--shadow);position:relative;
+}
+.game-top{display:flex;justify-content:space-between;gap:12px;align-items:start}
+.game-category{font-weight:900;letter-spacing:.1em;text-transform:uppercase;font-size:13px}
+.points{font-family:Georgia,serif;font-size:30px;font-weight:900}
+.current-team{display:inline-block;margin-top:12px;padding:8px 12px;background:#111;color:#fff;border-radius:999px;font-weight:900}
+.clue-area{margin:44px auto 0;max-width:780px;text-align:center}
+.clue-number{color:#777;font-weight:900;letter-spacing:.1em;text-transform:uppercase}.clue-text{font-family:Georgia,serif;font-size:clamp(27px,4vw,43px);line-height:1.14;margin:16px 0 24px}
+.hidden-message{padding:35px;border:1px dashed #aaa;border-radius:16px;color:#777}
+.game-actions{display:flex;justify-content:center;gap:9px;flex-wrap:wrap;margin-top:25px}
+.timer{font:900 42px Georgia;margin:15px 0}.timer.warn{color:var(--accent)}
+.side{display:flex;flex-direction:column;gap:14px}
+.side .panel{padding:18px}
+.team-row{display:flex;justify-content:space-between;align-items:center;padding:10px 11px;border:1px solid var(--line);border-radius:12px;margin:7px 0;background:#faf9f6}
+.team-row.active{border:2px solid #111;padding:9px 10px}.team-row .score{font-weight:900;font-size:20px}.team-row button{border:0;background:transparent;font-weight:900}
+.setup-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.field label{display:block;font-size:12px;font-weight:900;text-transform:uppercase;color:#666;margin-bottom:6px}.field input,.field select{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;background:#fff}
+.team-inputs{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px}
+.answer-box{background:#111;color:#fff;border-radius:16px;padding:20px;text-align:center;margin-top:20px}.answer-box small{color:#bbb;text-transform:uppercase;font-weight:900}.answer-box strong{display:block;font:900 30px Georgia;margin-top:5px}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:#111;color:#fff;padding:12px 16px;border-radius:12px;opacity:0;pointer-events:none;transition:.25s;z-index:100}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.modal-back{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:80;display:none;align-items:center;justify-content:center;padding:20px}.modal-back.show{display:flex}
+.modal{max-width:760px;width:100%;background:#fff;border-radius:22px;padding:26px;max-height:90vh;overflow:auto}.modal h2{font-family:Georgia,serif;margin-top:0}
+.tie-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.footer{max-width:1240px;margin:0 auto;padding:0 20px 35px;color:#777;font-size:12px}
+
+.credits-hero{background:rgba(250,249,246,.82);border:1px solid #d2d0ca;border-radius:26px;padding:42px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.credits-hero:before{content:"";position:absolute;inset:0;opacity:.16;pointer-events:none;background:radial-gradient(circle at 10% 10%,#000 0 1px,transparent 1.5px);background-size:7px 7px}
+.credits-hero>*{position:relative}
+.credits-mark{font-family:Georgia,serif;font-size:clamp(48px,7vw,82px);font-weight:900;letter-spacing:-4px;text-shadow:3px 3px 0 #fff,-1px -1px 0 #000;margin:0 0 12px}
+.credit-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}
+.credit-line{padding:15px 0;border-bottom:1px solid var(--line)}
+.credit-line:last-child{border-bottom:0}
+.credit-line small{display:block;text-transform:uppercase;letter-spacing:.08em;font-weight:900;color:var(--muted);font-size:11px;margin-bottom:4px}
+.credit-line strong{font-size:17px}
+.credit-note{margin-top:22px;padding:16px 18px;border-left:4px solid var(--accent);background:#f4f2ec;border-radius:0 12px 12px 0;line-height:1.55}
+@media(max-width:700px){.credit-grid{grid-template-columns:1fr}.credits-hero{padding:28px}}
+
+.empty{padding:50px;text-align:center;color:#777;background:#fff;border:1px dashed var(--line);border-radius:18px}
+@media(max-width:950px){.hero{grid-template-columns:1fr;padding:30px}.mode-grid{grid-template-columns:repeat(2,1fr)}.card-grid{grid-template-columns:repeat(2,1fr)}.game-shell{grid-template-columns:1fr}.rules{grid-template-columns:1fr}.side{order:2}}
+@media(max-width:620px){.topbar{align-items:flex-start;flex-direction:column;gap:10px}.nav{justify-content:flex-start}.hero h1{font-size:65px}.mode-grid,.card-grid,.stats,.setup-grid{grid-template-columns:1fr}.team-inputs{grid-template-columns:1fr}.hero-art{display:none}.game-card{padding:20px;min-height:500px}.page-head{align-items:flex-start;flex-direction:column}}
+</style>
+</head>
+<body>
+<div id="app" class="app"></div>
+<div id="toast" class="toast"></div>
+<div id="modalBack" class="modal-back"><div id="modal" class="modal"></div></div>
+<script>
+const CARDS = [{"id": 1, "label": "PATOLOGIA", "macro": "Patologia", "name": "Síndrome de Cushing", "clues": ["Posso ser de origem endógena ou exógena.", "Promovo aumento do catabolismo proteico e resistência à ação da insulina.", "Frequentemente estou associada à hiperglicemia, hipertensão arterial e perda de massa muscular.", "Posso causar estrias violáceas, pele fina e equimoses fáceis.", "Sou a condição clínica resultante do excesso crônico de cortisol no organismo.", "Meus sinais clássicos incluem obesidade centrípeta, fácies em lua cheia e giba de búfalo."]}, {"id": 2, "label": "PATOLOGIA", "macro": "Patologia", "name": "Doença de Addison", "clues": ["Minha causa mais comum é a destruição autoimune do córtex adrenal.", "O aumento compensatório do ACTH está relacionado a um dos meus principais sinais clínicos.", "Provoco redução importante da produção de cortisol e aldosterona.", "Posso causar hiponatremia, hipercalemia e hipotensão arterial.", "Meus pacientes frequentemente apresentam fadiga intensa, perda de peso e desejo por alimentos salgados.", "Minha manifestação mais característica é a hiperpigmentação da pele e das mucosas."]}, {"id": 3, "label": "NUTRIENTE", "macro": "Nutrientes, enzimas e substâncias", "name": "Colesterol", "clues": ["Minha disponibilidade na célula adrenal aumenta após estímulo pelo ACTH.", "Posso ser obtido pela alimentação ou sintetizado principalmente no fígado.", "Sou o precursor comum da síntese de todos os hormônios esteroides.", "Também participo da formação dos hormônios sexuais e da vitamina D.", "Além da função hormonal, componho a estrutura das membranas celulares.", "Sou um lipídio frequentemente associado às lipoproteínas LDL e HDL."]}, {"id": 4, "label": "HORMÔNIO", "macro": "Hormônios", "name": "Angiotensina II", "clues": ["Sou um hormônio peptídico produzido na etapa final do sistema renina-angiotensina.", "Sou formado pela ação da enzima conversora de angiotensina (ECA) sobre meu precursor.", "Minha produção aumenta em situações de hipovolemia, hipotensão ou redução da perfusão renal.", "Estimulo a secreção de aldosterona pelo córtex adrenal.", "Contribuo para o aumento da pressão arterial.", "Sou o principal hormônio responsável pela vasoconstrição."]}, {"id": 5, "label": "HORMÔNIO", "macro": "Hormônios", "name": "Cortisol", "clues": ["Sou sintetizado exclusivamente na zona fasciculada do córtex adrenal.", "Exerço retroalimentação negativa sobre CRH e ACTH.", "Estimulo a gliconeogênese hepática, favoreço a lipólise e participo da resposta ao estresse.", "Minha secreção segue um ritmo circadiano, com pico nas primeiras horas da manhã.", "Quando permaneço elevado cronicamente, posso causar Síndrome de Cushing.", "Sou conhecido como o hormônio do estresse."]}, {"id": 6, "label": "HORMÔNIO", "macro": "Hormônios", "name": "Aldosterona", "clues": ["Sou sintetizada na zona glomerulosa do córtex adrenal.", "Atuo nos túbulos distais e ductos coletores renais.", "Promovo reabsorção de sódio e excreção de potássio.", "Minha secreção é regulada principalmente pela angiotensina II.", "Sou fundamental para o controle da volemia e da pressão arterial.", "Sou o principal hormônio mineralocorticóide do organismo."]}, {"id": 7, "label": "HORMÔNIO", "macro": "Hormônios", "name": "ACTH (adrenocorticotrófico)", "clues": ["Sou um peptídeo derivado da molécula precursora POMC.", "Minha secreção é estimulada pelo CRH produzido no hipotálamo.", "Estimulo a captação de colesterol e a esteroidogênese no córtex adrenal.", "Meus níveis aumentam intensamente na insuficiência adrenal primária.", "Minha secreção antecede as variações diárias do cortisol.", "Sou o hormônio adrenocorticotrófico produzido pela adeno-hipófise."]}, {"id": 8, "label": "SINAL CLÍNICO", "macro": "Sinais Clínicos", "name": "Giba de Búfalo", "clues": ["Resulto da redistribuição anormal do tecido adiposo induzida pelo excesso de cortisol.", "Sou um dos principais sinais físicos do hipercortisolismo.", "Costumo ocorrer juntamente com obesidade centrípeta.", "Frequentemente acompanho a fácies em lua cheia", "Correspondo ao acúmulo de gordura na região cervical posterior.", "Também sou conhecida como \"corcova\" da Síndrome de Cushing."]}, {"id": 9, "label": "SINAL CLÍNICO", "macro": "Sinais Clínicos", "name": "Hiperpigmentação", "clues": ["Minha ocorrência está relacionada ao aumento compensatório do ACTH derivado da POMC.", "Sou causada pelo aumento concomitante da produção de hormônio estimulador de melanócitos.", "Posso ser observada na pele, cicatrizes recentes e mucosa oral.", "Sou altamente sugestiva de insuficiência adrenal primária.", "Reflito a destruição crônica do córtex adrenal.", "Sou o escurecimento característico da pele encontrado na Doença de Addison. PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2"]}, {"id": 10, "label": "HORMÔNIO", "macro": "Hormônios", "name": "CRH (Liberador de Corticotrofina)", "clues": ["Sou sintetizado por neurônios localizados no núcleo paraventricular do hipotálamo.", "Minha secreção aumenta em situações de estresse físico e psicológico.", "Atuo sobre células corticotróficas da adeno-hipófise.", "Estimulo diretamente a liberação de ACTH.", "Minha atividade é inibida pelo cortisol através de feedback negativo.", "Sou o hormônio hipotalâmico que inicia o eixo hipotálamo-hipófise-adrenal."]}, {"id": 11, "label": "PATOLOGIA", "macro": "Patologia", "name": "Hipotireoidismo", "clues": ["Na dietoterapia, geralmente é indicada uma alimentação normocalórica ou hipocalórica, conforme o estado nutricional.", "Reduzo o consumo energético e a termogênese do organismo.", "Meus pacientes apresentam bradicardia, sonolência, intolerância ao frio e pele seca.", "Provoco diminuição generalizada da Taxa Metabólica Basal.", "Sou identificado laboratorialmente por TSH elevado e T4 livre reduzido.", "Sou a síndrome clínica decorrente da deficiência da produção ou da ação dos hormônios tireoidianos."]}, {"id": 12, "label": "PATOLOGIA", "macro": "Patologia", "name": "Doença de Graves", "clues": ["Resulto da perda da autotolerância imunológica contra componentes da tireoide.", "Caracterizo-me pela produção de autoanticorpos estimuladores do receptor de TSH.", "Promovo hiperestimulação da glândula, levando ao hipertireoidismo", "Meus pacientes frequentemente apresentam perda de peso, taquicardia e intolerância ao calor.", "Posso causar bócio difuso, exoftalmia e mixedema pré-tibial.", "Sou a principal causa de hipertireoidismo."]}, {"id": 13, "label": "PATOLOGIA", "macro": "Patologia", "name": "Hiperparatireoidismo Secundário", "clues": ["Desenvolvo-me em resposta a estímulos persistentes externos às paratireoides.", "Sou desencadeado pela retenção de fósforo, redução da vitamina D ativa e hipocalcemia.", "Ocorro principalmente em pacientes com Doença Renal Crônica.", "Sou uma resposta compensatória à hipocalcemia crônica.", "Posso provocar osteodistrofia renal e desmineralização óssea.", "Caracterizo-me pela elevação persistente dos níveis de PTH como mecanismo compensatório."]}, {"id": 14, "label": "PATOLOGIA", "macro": "Patologia", "name": "Cretinismo (Hipotireoidismo Congênito)", "clues": ["Posso decorrer de disgenesia tireoidiana ou deficiência materna de iodo.", "Comprometo intensamente o crescimento e o desenvolvimento neurológico.", "Manifesto letargia, constipação e hérnia umbilical nas primeiras semanas de vida.", "Caracterizo-me por língua protrusa, baixa estatura e atraso do desenvolvimento.", "Resulto da deficiência grave de hormônios tireoidianos desde o nascimento.", "Sou o hipotireoidismo congênito não tratado."]}, {"id": 15, "label": "HORMÔNIO", "macro": "Hormônios", "name": "Paratormônio", "clues": ["Sou produzido pelas células principais das glândulas paratireoides.", "Estimulo a enzima renal 1-alfa-hidroxilase, aumentando a produção de vitamina D ativa.", "Aumento a reabsorção renal de cálcio e estimulo a mobilização óssea.", "Minha secreção aumenta quando a concentração de cálcio sérico diminui.", "Atuo na manutenção da homeostase do cálcio e do fósforo.", "Sou o principal hormônio das paratireóides."]}, {"id": 16, "label": "ENZIMA", "macro": "Nutrientes, enzimas e substâncias", "name": "Glutationa Peroxidase (GPx)", "clues": ["Atuo protegendo células contra o estresse oxidativo.", "Cataliso a degradação do peróxido de hidrogênio (H₂O₂).", "Minha deficiência compromete a proteção da tireoide e o metabolismo dos hormônios tireoidianos.", "Sou uma importante enzima antioxidante do organismo.", "Sou uma enzima cuja atividade depende da presença de selenocisteína.", "Minha síntese depende diretamente da disponibilidade de selênio."]}, {"id": 17, "label": "NUTRIENTE", "macro": "Nutrientes, enzimas e substâncias", "name": "Iodo", "clues": ["Participo da organificação ao me ligar aos resíduos de tirosina da tireoglobulina.", "Minha deficiência aumenta a secreção de TSH e favorece a hiperplasia da glândula.", "Sou indispensável para a síntese dos hormônios T3 e T4.", "Sou um micronutriente essencial para o funcionamento da tireoide.", "Sou o único micronutriente incorporado diretamente à estrutura dos hormônios tireoidianos.", "No Brasil, sou adicionado obrigatoriamente ao sal de cozinha."]}, {"id": 18, "label": "SINAL CLÍNICO", "macro": "Sinais Clínicos", "name": "Bócio", "clues": ["Resulto da hiperplasia e hipertrofia das células da glândula tireoide.", "Posso ocorrer tanto no hipertireoidismo quanto no hipotireoidismo.", "Frequentemente relaciono-me à deficiência de iodo ou ao excesso de estímulo por TSH.", "Manifesto aumento visível ou palpável da região anterior do pescoço.", "Sou um importante sinal clínico em doenças tireoidianas.", "Sou o aumento do volume da glândula tireoide. PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2"]}, {"id": 19, "label": "SINAL CLÍNICO", "macro": "Sinais Clínicos", "name": "Exoftalmia", "clues": ["Resulto do acúmulo de glicosaminoglicanos nos tecidos retro-orbitários.", "Posso cursar com retração palpebral, edema e diplopia.", "Sou uma manifestação extratireoidiana de origem autoimune.", "Sou a manifestação ocular mais característica da Doença de Graves.", "Confiro ao paciente a aparência de olhos salientes.", "Caracterizo-me pela protrusão dos globos oculares."]}, {"id": 20, "label": "HORMÔNIO", "macro": "Hormônios", "name": "T4 (Tiroxina)", "clues": ["Sou o principal hormônio produzido e secretado pela glândula tireoide.", "Possuo quatro átomos de iodo em minha estrutura química.", "Minha dosagem, juntamente com o TSH, auxilia na avaliação da função tireoidiana.", "Tenho meia-vida plasmática maior do que a do T3.", "Sou considerado um pró-hormônio, pois grande parte dos meus efeitos depende da conversão em T3 nos tecidos.", "Sou conhecido como tiroxina."]}, {"id": 21, "label": "PATOLOGIA", "macro": "Patologia", "name": "Diabetes Mellitus Tipo 1 (DM1)", "clues": ["Minha fisiopatologia envolve destruição imunomediada das células β pancreáticas por linfócitos T.", "Meus pacientes apresentam início abrupto de poliúria, polidipsia, polifagia e perda de peso.", "Tenho elevada predisposição à cetoacidose diabética.", "Represento cerca de 5 a 10% dos casos de diabetes.", "Desenvolvo deficiência absoluta de insulina.", "Necessito de insulinoterapia desde o diagnóstico para garantir a sobrevida."]}, {"id": 22, "label": "PATOLOGIA", "macro": "Patologia", "name": "Diabetes Mellitus Tipo 2 (DM2)", "clues": ["Envolvo defeitos na sinalização celular e na translocação do transportador GLUT-4", "Com a progressão da doença, ocorre falência das células β pancreáticas.", "Estou fortemente associado à obesidade visceral, envelhecimento e sedentarismo.", "Caracterizo-me por resistência periférica à ação da insulina.", "Meu tratamento inicial baseia-se, frequentemente, em mudanças no estilo de vida e na alimentação.", "Sou o tipo mais frequente de diabetes mellitus."]}, {"id": 23, "label": "COMPLICAÇÃO", "macro": "Patologia", "name": "Cetoacidose Diabética", "clues": ["Desenvolvo-me quando há deficiência grave de insulina associada ao aumento de hormônios contrarreguladores.", "Estimulo intensa lipólise e produção hepática de corpos cetônicos.", "Manifesto desidratação importante, dor abdominal e hálito cetônico.", "Ocorro principalmente em pacientes com DM1.", "Sou a principal complicação aguda do Diabetes Mellitus tipo 1.", "Provoco acidose metabólica devido ao acúmulo de corpos cetônicos."]}, {"id": 24, "label": "COMPLICAÇÃO", "macro": "Patologia", "name": "Retinopatia Diabética", "clues": ["Sou uma complicação microvascular causada pela exposição prolongada à hiperglicemia.", "Minha ocorrência aumenta com o tempo de doença e com o mau controle glicêmico.", "A hipertensão arterial acelera minha progressão.", "Posso permanecer assintomática nas fases iniciais da doença.", "Meu rastreamento é realizado periodicamente por meio do exame de fundo de olho.", "Sou a principal causa de cegueira adquirida em adultos."]}, {"id": 25, "label": "HORMÔNIO", "macro": "Hormônios", "name": "Insulina", "clues": ["Exerço meus efeitos por meio de receptores com atividade tirosina-quinase.", "Sou produzida pelas células β das ilhotas pancreáticas.", "Favoreço glicogênese, lipogênese e síntese proteica.", "Estimulo a captação de glicose principalmente por meio do transportador GLUT-4.", "Minha ausência compromete a utilização da glicose pelos tecidos periféricos.", "Sou o principal hormônio anabólico do organismo."]}, {"id": 26, "label": "HORMÔNIO", "macro": "Hormônios", "name": "Glucagon", "clues": ["Sou produzido pelas células α das ilhotas pancreáticas.", "Minha secreção aumenta durante o jejum e situações de hipoglicemia.", "Estimulo glicogenólise e gliconeogênese hepáticas", "Atuo principalmente no fígado para manter a glicemia durante o jejum.", "Sou o principal hormônio contrarregulador da insulina.", "Minha função é elevar a glicemia."]}, {"id": 27, "label": "MARCADOR LAB", "macro": "Marcadores Laboratoriais", "name": "Glicemia de Jejum", "clues": ["Sou dosada após um período mínimo de oito horas sem ingestão calórica.", "Avalio a homeostase glicêmica basal.", "Faço parte dos exames utilizados para diagnóstico e rastreamento do diabetes.", "Valores persistentemente elevados sugerem alteração do metabolismo da glicose.", "Quando apresento valores iguais ou superiores a 126 mg/dL em duas ocasiões, posso confirmar diabetes.", "Sou o exame mais utilizado para o rastreamento inicial do diabetes mellitus. PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2"]}, {"id": 28, "label": "SINAL CLÍNICO", "macro": "Sinais Clínicos", "name": "Acantose Nigricans", "clues": ["Resulto da hiperinsulinemia compensatória sobre receptores presentes na pele.", "Estimulo proliferação de queratinócitos e fibroblastos.", "Costumo aparecer nas dobras cutâneas.", "Sou frequentemente observada em indivíduos com obesidade visceral e síndrome metabólica.", "Minha presença aumenta a suspeita de resistência à insulina.", "Caracterizo-me por placas hiperpigmentadas de aspecto aveludado."]}, {"id": 29, "label": "SINAL CLÍNICO", "macro": "Sinais Clínicos", "name": "Poliúria", "clues": ["Ocorro quando a glicose ultrapassa o limiar renal de reabsorção.", "Sou consequência da diurese osmótica provocada pela glicosúria.", "Posso causar importante perda hídrica e desidratação.", "Geralmente sou acompanhada por polidipsia.", "Faço parte dos quatro \"Ps\" clássicos do diabetes.", "Caracterizo-me pelo aumento excessivo do volume urinário."]}, {"id": 30, "label": "MARCADOR LAB", "macro": "Marcadores Laboratoriais", "name": "Hemoglobina Glicada", "clues": ["Sou formada por glicação não enzimática da hemoglobina.", "Meu resultado não sofre influência significativa das variações agudas da glicemia.", "Auxilio tanto no diagnóstico quanto no acompanhamento do diabetes.", "Para pacientes com diabetes, a meta terapêutica é permanecer abaixo de 7%.", "Represento a exposição média da hemácia à glicose durante sua vida útil.", "Sou o principal marcador do controle glicêmico dos últimos dois a três meses."]}, {"id": 31, "label": "PATOLOGIA", "macro": "Patologia", "name": "DPOC - Fenótipo Enfisematoso", "clues": ["Minha fisiopatologia decorre do desequilíbrio entre proteases e antiproteases no tecido pulmonar.", "Caracterizo-me pela destruição progressiva dos septos alveolares e perda da elasticidade pulmonar.", "Provoco aprisionamento aéreo e hiperinsuflação pulmonar.", "Meus pacientes apresentam dispneia intensa e elevado gasto energético respiratório.", "Frequentemente cursam com perda importante de peso e redução da massa muscular.", "Sou o fenótipo da DPOC conhecido pelo \"tórax em tonel\" e pelo paciente emagrecido (\"pink puffer\")."]}, {"id": 32, "label": "PATOLOGIA", "macro": "Patologia", "name": "DPOC – Fenótipo Bronquítico", "clues": ["Caracterizo-me por inflamação crônica das pequenas vias aéreas e hipertrofia das glândulas mucosas.", "Promovo hipersecreção persistente de muco.", "Minha definição clínica exige tosse produtiva por pelo menos três meses em dois anos consecutivos.", "Meus pacientes costumam apresentar maior retenção de CO₂ e episódios de exacerbação.", "O paciente costuma apresentar peso corporal preservado ou aumentado.", "Sou o fenótipo da DPOC caracterizado por tosse crônica com expectoração diária."]}, {"id": 33, "label": "PATOLOGIA", "macro": "Patologia", "name": "Síndrome do Desconforto Respiratório Agudo (SDRA/SARA)", "clues": ["Resulto de uma lesão alveolar difusa associada à intensa resposta inflamatória.", "Promovo aumento da permeabilidade da membrana alvéolo-capilar.", "Provoco redução importante da complacência pulmonar e hipoxemia refratária.", "Frequentemente sou desencadeada por sepse, aspiração gástrica ou trauma grave.", "Na radiografia de tórax, apresento infiltrados bilaterais difusos.", "Sou uma forma grave de insuficiência respiratória aguda conhecida como \"pulmão branco\"."]}, {"id": 34, "label": "PATOLOGIA", "macro": "Patologia", "name": "Tuberculose", "clues": ["Meu agente etiológico tem afinidade pelo tecido pulmonar e pode permanecer em estado latente por anos.", "Caracterizo-me pela formação de granulomas, principalmente no tecido pulmonar.", "Meu tratamento requer a associação de múltiplos antimicrobianos por, no mínimo, seis meses.", "Posso causar tosse persistente, acompanhada de expectoração com sangue (hemoptise).", "A desnutrição aumenta o risco de adoecimento e pode agravar minha evolução clínica.", "Sou uma doença infecciosa causada pelo Mycobacterium tuberculosis."]}, {"id": 35, "label": "NUTRIENTE", "macro": "Nutrientes, enzimas e substâncias", "name": "Selênio", "clues": ["Minha deficiência compromete a resposta imunológica.", "Faço parte das enzimas antioxidantes responsáveis pela defesa celular.", "Contribuo para a neutralização dos peróxidos produzidos no metabolismo celular.", "Também participo do metabolismo periférico dos hormônios tireoidianos.", "Sou incorporado às proteínas na forma do aminoácido selenocisteína.", "Sou o micronutriente essencial para a atividade da glutationa peroxidase."]}, {"id": 36, "label": "SUBSTÂNCIA", "macro": "Nutrientes, enzimas e substâncias", "name": "Surfactante Pulmonar", "clues": ["Sou sintetizado pelos pneumócitos do tipo II.", "Sou constituído principalmente por fosfolipídios e proteínas específicas.", "Reduzo a tensão superficial na interface ar-líquido dos alvéolos.", "Minha deficiência favorece o colapso alveolar e aumento do trabalho respiratório", "Minha produção pode ser reduzida em estados de desnutrição grave.", "Sou a substância responsável por manter os alvéolos abertos durante a respiração. PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2"]}, {"id": 37, "label": "SINAL CLÍNICO", "macro": "Sinais Clínicos", "name": "Cianose", "clues": ["Ocorro quando aumenta a concentração de hemoglobina desoxigenada nos capilares.", "Posso ocorrer tanto por causas respiratórias quanto cardiovasculares.", "Costumo aparecer inicialmente em lábios, língua e extremidades.", "Frequentemente acompanho insuficiência respiratória grave.", "Posso estar associada ao uso da musculatura acessória da respiração.", "Caracterizo-me pela coloração azulada da pele e das mucosas."]}, {"id": 38, "label": "SINAL CLÍNICO", "macro": "Sinais Clínicos", "name": "Dispneia", "clues": ["Resulto do aumento do trabalho respiratório e da sensação de esforço ventilatório.", "Posso decorrer da hiperinsuflação pulmonar observada na DPOC.", "Frequentemente limita atividades físicas e até a alimentação.", "Pode vir acompanhada de uso da musculatura acessória da respiração.", "É um dos sintomas mais comuns das doenças pulmonares e cardíacas.", "Sou a sensação de falta de ar."]}, {"id": 39, "label": "PROTEÍNA", "macro": "Nutrientes, enzimas e substâncias", "name": "Alfa-1 Antitripsina", "clues": ["Sou sintetizada principalmente pelos hepatócitos.", "Atuo como importante antiprotease circulante.", "Neutralizo a elastase liberada pelos neutrófilos durante processos inflamatórios.", "Minha deficiência hereditária favorece a destruição precoce dos alvéolos.", "Devo ser investigada em pacientes com enfisema antes dos 40 anos ou sem histórico importante de tabagismo.", "Sou a principal proteína protetora contra a degradação do tecido elástico pulmonar."]}, {"id": 40, "label": "PATOLOGIA", "macro": "Patologia", "name": "Anemia Ferropriva", "clues": ["Meus pacientes apresentam fadiga, glossite, unhas frágeis e redução da capacidade funcional.", "Posso resultar de ingestão insuficiente, má absorção ou perdas sanguíneas crônicas.", "Produzo hemácias microcíticas e hipocrômicas.", "Caracterizo-me laboratorialmente por depleção dos estoques de ferro e redução da síntese de hemoglobina.", "Sou a anemia nutricional mais prevalente no mundo.", "Desenvolvo-me pela deficiência de ferro."]}, {"id": 41, "label": "PATOLOGIA", "macro": "Patologia", "name": "Anemia da Doença Crônica (ADC)", "clues": ["Minha fisiopatologia envolve aumento da produção de hepcidina durante processos inflamatórios.", "Promovo a retenção do ferro em macrófagos e redução de sua disponibilidade para eritropoese.", "Apresento ferro sérico reduzido, mas ferritina normal ou aumentada.", "Estou frequentemente associada a câncer, doenças autoimunes e infecções crônicas.", "A suplementação oral de ferro costuma ser pouco eficaz enquanto persistir a inflamação.", "Sou a anemia mais comum em pacientes com doenças inflamatórias crônicas."]}, {"id": 42, "label": "PATOLOGIA", "macro": "Patologia", "name": "Anemia Falciforme", "clues": ["Sou causada por uma mutação no gene da β-globina, originando a hemoglobina S.", "Em condições de baixa oxigenação, minhas hemácias sofrem polimerização e deformação.", "Provoco redução importante da complacência pulmonar e hipoxemia refratária.", "Minhas crises podem ser desencadeadas por hipóxia, desidratação e infecções.", "Na radiografia de tórax, apresento infiltrados bilaterais difusos.", "Sou uma forma grave de insuficiência respiratória aguda conhecida como \"pulmão branco\"."]}, {"id": 43, "label": "PATOLOGIA", "macro": "Patologia", "name": "Anemia Perniciosa", "clues": ["Resulto da deficiência do fator intrínseco produzido pelas células parietais gástricas.", "Comprometo a absorção intestinal da vitamina B12.", "Produzo anemia megaloblástica com macrocitose.", "Posso causar parestesias e alterações neurológicas irreversíveis se não tratada.", "O tratamento geralmente exige reposição parenteral de vitamina B12.", "Sou a principal anemia causada por deficiência de fator intrínseco."]}, {"id": 44, "label": "HORMÔNIO", "macro": "Hormônios", "name": "Eritropoetina (EPO)", "clues": ["Sou produzida principalmente pelas células intersticiais peritubulares dos rins.", "Minha síntese diminui progressivamente na Doença Renal Crônica.", "Estimulo proliferação e diferenciação dos precursores eritroides na medula óssea.", "Minha deficiência provoca anemia normocítica e normocrômica.", "Não sou reposta pela hemodiálise, apenas por administração exógena.", "Sou o principal hormônio regulador da produção de hemácias."]}, {"id": 45, "label": "HORMÔNIO", "macro": "Hormônios", "name": "Hepcidina", "clues": ["Sou sintetizada principalmente pelos hepatócitos.", "Minha produção aumenta sob estímulo de citocinas inflamatórias, especialmente IL-6.", "Ligo-me à ferroportina e induzo sua degradação.", "Reduzo a absorção intestinal e a liberação do ferro armazenado.", "Sou a principal responsável pelo sequestro de ferro na inflamação.", "Sou o hormônio central da homeostase do ferro. PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2"]}, {"id": 46, "label": "NUTRIENTE", "macro": "Nutrientes, enzimas e substâncias", "name": "B12", "clues": ["Participo da síntese de DNA e da formação da bainha de mielina.", "Sou absorvida principalmente no íleo terminal.", "Minha deficiência causa anemia macrocítica e alterações neurológicas.", "Sou encontrada quase exclusivamente em alimentos de origem animal.", "Minha absorção depende da ligação ao fator intrínseco no trato gastrointestinal.", "Sou a vitamina conhecida como cobalamina."]}, {"id": 47, "label": "SINAL CLÍNICO", "macro": "Sinais Clínicos", "name": "Palidez", "clues": ["Resulto da diminuição da concentração de hemoglobina circulante.", "Minha avaliação faz parte do exame físico de pacientes com suspeita de anemia.", "Posso ser observada na pele, conjuntivas, mucosa oral e leito ungueal.", "Frequentemente acompanho fadiga, tontura e intolerância ao exercício.", "Sou um dos sinais físicos mais característicos das anemias.", "Caracterizo-me pela perda da coloração rosada habitual da pele e das mucosas."]}, {"id": 48, "label": "SINAL CLÍNICO", "macro": "Sinais Clínicos", "name": "Pica (Alotriofagia)", "clues": ["Sou considerada uma alteração do comportamento alimentar.", "Caracterizo-me pelo desejo persistente de ingerir substâncias sem valor nutricional", "Posso incluir o desejo de ingerir gelo, terra ou amido.", "Estou frequentemente associada à deficiência crônica de ferro.", "Meu reconhecimento pode auxiliar no diagnóstico clínico da anemia ferropriva.", "Sou mais frequente em gestantes."]}, {"id": 49, "label": "MARCADOR LAB", "macro": "Marcadores Laboratoriais", "name": "Ferritina", "clues": ["Sou uma proteína intracelular capaz de armazenar milhares de átomos de ferro.", "Também atuo como proteína de fase aguda positiva.", "Meus valores podem aumentar em infecções, inflamações e neoplasias.", "Minha interpretação deve considerar o contexto clínico do paciente.", "Sou o exame mais sensível para detectar a deficiência de ferro antes do aparecimento da anemia.", "Avalio as reservas de ferro do organismo. PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2"]}, {"id": 50, "label": "PATOLOGIA", "macro": "Patologia", "name": "Angina", "clues": ["Ocorro quando a oferta de oxigênio ao coração é menor que sua necessidade.", "Posso ocorrer mesmo sem dor ou outros sintomas perceptíveis.", "Na forma instável, posso estar relacionada à ruptura de uma placa de ateroma e à formação de um trombo.", "Na forma estável, geralmente sou desencadeada por esforço físico ou estresse e aliviada com repouso.", "Costumo causar dor ou desconforto no peito, podendo irradiar para braço, ombro, costas ou mandíbula.", "Sou uma dor ou desconforto no peito causado pela falta de oxigênio no coração."]}, {"id": 51, "label": "MOLÉCULA", "macro": "Nutrientes, enzimas e substâncias", "name": "NF-kB", "clues": ["Em condições de repouso, permaneço inativo no citoplasma ligado a uma proteína inibidora.", "O consumo de ácidos graxos monoinsaturados pode modular minha atividade e contribuir para a redução da inflamação vascular.", "Posso ser ativado por espécies reativas de oxigênio, oxLDL e citocinas pró- inflamatórias, como TNF-α e IL-1β.", "Quando ativado, aumento a expressão de moléculas de adesão, como VCAM-1, ICAM-1 e E-selectina.", "Participo da resposta inflamatória envolvida no desenvolvimento da aterosclerose.", "Sou um fator de transcrição envolvido na regulação da resposta imune e inflamatória."]}, {"id": 52, "label": "MOLÉCULA", "macro": "Nutrientes, enzimas e substâncias", "name": "Óxido Nítrico", "clues": ["Sou produzido pelas células do endotélio a partir da L-arginina.", "Atuo nas células musculares dos vasos por meio do GMP cíclico (GMPc).", "Promovo o relaxamento da musculatura dos vasos sanguíneos.", "Também dificulto a adesão de plaquetas e leucócitos ao endotélio.", "Minha disponibilidade pode diminuir durante a inflamação e o estresse oxidativo.", "Sou um importante vasodilatador produzido pelo endotélio."]}, {"id": 53, "label": "MARCADOR LAB", "macro": "Marcadores Laboratoriais", "name": "HDL", "clues": ["Sou uma lipoproteína cuja principal apolipoproteína é a ApoA1.", "Posso atuar na proteção do endotélio e apresentar propriedades anti-inflamatórias e antioxidantes.", "Participo da maturação e do metabolismo das lipoproteínas no sangue.", "Participo da remoção do colesterol excedente dos tecidos periféricos.", "Minha concentração pode ser influenciada por fatores como atividade física, alimentação e metabolismo.", "Sou conhecido popularmente como o “colesterol bom”."]}, {"id": 54, "label": "MARCADOR LAB", "macro": "Marcadores Laboratoriais", "name": "LDL", "clues": ["Sou uma lipoproteína rica em colesterol e tenho a ApoB100 como principal apolipoproteína.", "No espaço subendotelial, posso sofrer modificações, como a oxidação.", "Minha forma oxidada pode ser captada pelos macrófagos.", "Essa captação pode formar células espumosas e contribuir para a aterosclerose.", "Posso atravessar o endotélio e permanecer na parede das artérias.", "Sou a lipoproteína de baixa densidade conhecida como “colesterol ruim”."]}, {"id": 55, "label": "MARCADOR LAB", "macro": "Marcadores Laboratoriais", "name": "Lp(a)", "clues": ["Tenho características associadas a efeitos aterogênicos, inflamatórios e trombóticos.", "Meus níveis no sangue são fortemente determinados por fatores genéticos.", "A alimentação e o estilo de vida exercem pouca influência sobre meus níveis.", "Minha dosagem pode ajudar a identificar pessoas com maior risco cardiovascular.", "Minha concentração costuma ser relativamente estável ao longo da vida.", "Sou uma partícula semelhante à LDL ligada a uma apolipoproteína específica chamada apolipoproteína(a)."]}, {"id": 56, "label": "PATOLOGIA", "macro": "Patologia", "name": "ICC Direita", "clues": ["Posso ocorrer como consequência de doenças pulmonares ou de uma insuficiência cardíaca esquerda.", "Provoco aumento da pressão no sistema venoso.", "Posso causar acúmulo de líquido em órgãos e tecidos.", "Posso provocar turgência jugular, ascite e edema nas pernas.", "Sou a insuficiência cardíaca que causa principalmente congestão na circulação sistêmica.", "Ocorro quando as estruturas direitas do coração não conseguem bombear adequadamente o sangue para a circulação pulmonar."]}, {"id": 57, "label": "PATOLOGIA", "macro": "Patologia", "name": "ICC Esquerda", "clues": ["Costumo provocar falta de ar aos esforços e dificuldade para respirar ao deitar.", "Aumento as pressões dentro das câmaras cardíacas esquerdas e da circulação pulmonar.", "Posso reduzir a quantidade de sangue bombeada para a circulação sistêmica.", "Em casos graves, posso causar edema agudo de pulmão.", "Sou a insuficiência cardíaca que causa principalmente congestão pulmonar.", "Ocorro quando o lado esquerdo do coração não consegue bombear adequadamente o sangue para a circulação sistêmica."]}, {"id": 58, "label": "PATOLOGIA", "macro": "Patologia", "name": "Hipertensão", "clues": ["Meu desenvolvimento está relacionado à interação entre fatores genéticos, ambientais e comportamentais.", "Aumentar meus níveis por muito tempo pode causar lesões em órgãos como coração, cérebro e rins.", "Meu controle envolve mudanças no estilo de vida, como redução do consumo de sódio, perda de peso e atividade física.", "Sou uma condição crônica relacionada a alterações vasculares e ao controle da pressão arterial.", "Posso aumentar o risco de infarto, AVC e doença renal.", "Sou a doença conhecida popularmente como “pressão alta”. PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2 PERFIL PERFIL PERFIL NUTRIÇÃO MONITORIA DE NC2"]}, {"id": 59, "label": "PATOLOGIA", "macro": "Patologia", "name": "IAM", "clues": ["Posso causar dor ou pressão no peito, sudorese, náuseas e palidez.", "Posso apresentar alterações no eletrocardiograma, com ou sem elevação do segmento ST.", "Frequentemente estou relacionada à ruptura de uma placa de ateroma e à formação de um trombo.", "A troponina é um dos principais exames utilizados para identificar a lesão do músculo cardíaco.", "Ocorro quando a falta de fluxo sanguíneo para o coração provoca lesão e morte de células do miocárdio.", "Sou a emergência cardíaca conhecida popularmente como “ataque cardíaco”."]}, {"id": 60, "label": "NUTRIENTE", "macro": "Nutrientes, enzimas e substâncias", "name": "Sódio", "clues": ["Sou o principal cátion presente no líquido extracelular.", "Também sou importante para a transmissão dos impulsos nervosos.", "Participo da regulação do volume de líquidos e da pressão osmótica do organismo.", "Quando retido em excesso, posso contribuir para o aumento do volume de líquidos e da pressão arterial.", "Minha ingestão excessiva pode ser especialmente prejudicial em pessoas com hipertensão, insuficiência cardíaca ou doença renal.", "Sou o mineral presente no sal de cozinha, o cloreto de sódio."]}, {"id": 61, "label": "PATOLOGIA", "macro": "Patologia", "name": "Dislipidemia", "clues": ["Caracterizo-me por alterações nos níveis ou no metabolismo das lipoproteínas do sangue.", "Posso envolver alterações no colesterol, nos triglicerídeos ou no HDL.", "Posso aumentar a quantidade de lipídios circulantes e contribuir para a formação de placas nas artérias.", "Minha alimentação deve priorizar a redução de gorduras trans e o controle do consumo de gorduras saturadas.", "O excesso de açúcares e carboidratos refinados pode contribuir para o aumento dos triglicerídeos.", "Sou o nome dado às alterações nos níveis de colesterol e outros lipídios do sangue."]}, {"id": 62, "label": "PATOLOGIA", "macro": "Patologia", "name": "Aterosclerose", "clues": ["Sou um processo que ocorre principalmente na camada interna das artérias.", "Posso começar com alterações no endotélio causadas por fatores como hipertensão e tabagismo.", "Envolvo a entrada e modificação de lipídios na parede das artérias.", "Posso levar à formação de células espumosas e placas de ateroma.", "A ruptura de uma placa pode favorecer a formação de um trombo e causar eventos cardiovasculares.", "Sou a doença caracterizada pela formação de placas de gordura na parede das artérias."]}, {"id": 63, "label": "MARCADOR LAB", "macro": "Marcadores Laboratoriais", "name": "Troponina", "clues": ["Sou formado por um complexo de proteínas reguladoras associado aos filamentos contráteis das células musculares estriadas", "Minhas formas I e T apresentam elevada especificidade para o tecido cardíaco, sendo utilizadas para identificar lesão das células do miocárdio.", "Minha concentração no sangue aumenta após uma lesão cardíaca, permanecendo elevada por vários dias.", "Sou mais específica para lesão miocárdica do que marcadores tradicionalmente utilizados, como a CK-MB e a mioglobina.", "Minha dosagem de alta sensibilidade é amplamente utilizada na avaliação de pacientes com suspeita de síndrome coronariana aguda.", "Sou o principal biomarcador sanguíneo utilizado na investigação de infarto agudo do miocárdio."]}, {"id": 64, "label": "ENZIMA", "macro": "Nutrientes, enzimas e substâncias", "name": "ECA", "clues": ["Sou uma enzima encontrada principalmente na superfície das células endoteliais.", "Também participo da degradação de uma substância vasodilatadora chamada bradicinina.", "Medicamentos que bloqueiam minha ação podem causar tosse seca devido ao aumento da concentração de bradicinina.", "Minha atividade contribui para a formação de um potente agente vasoconstritor envolvido na regulação da pressão arterial.", "Enalapril e captopril são exemplos de medicamentos que inibem minha atividade, contribuindo para a redução da pressão arterial.", "Sou responsável pela conversão da Angiotensina I em Angiotensina II"]}, {"id": 65, "label": "NUTRIENTE", "macro": "Nutrientes, enzimas e substâncias", "name": "Ômega-3", "clues": ["Sou uma família de ácidos graxos poli-insaturados.", "Meu precursor de origem vegetal é um ácido graxo chamado ácido alfa-linolênico (ALA).", "Participo de processos relacionados à modulação da inflamação e à função cardiovascular.", "Linhaça, chia e nozes são fontes do meu precursor vegetal.", "EPA e DHA são exemplos das minhas formas mais conhecidas.", "Sou uma família de ácidos graxos conhecida por sua primeira dupla ligação estar localizada no terceiro carbono a partir da extremidade metila."]}, {"id": 66, "label": "NUTRIENTE", "macro": "Nutrientes, enzimas e substâncias", "name": "Gordura saturada", "clues": ["Minha estrutura química influencia propriedades físicas dos alimentos.", "Posso contribuir para o aumento da concentração sanguínea de LDL-colesterol.", "Minha ingestão deve ser limitada.", "Recomenda-se que minha participação na alimentação seja inferior a 7% do valor energético total.", "Sou encontrada em maior quantidade em alimentos como carnes gordurosas, manteiga, queijos amarelos, toucinho e alguns óleos tropicais.", "Sou um tipo de ácido graxo cuja cadeia carbônica não apresenta ligações duplas entre seus carbonos."]}, {"id": 67, "label": "ENZIMA", "macro": "Nutrientes, enzimas e substâncias", "name": "HMG-CoA redutase", "clues": ["Sou uma enzima localizada no retículo endoplasmático.", "Participo de uma via metabólica que ocorre principalmente no fígado.", "Estou envolvida na produção endógena de colesterol.", "Minha atividade diminui quando há excesso de colesterol dentro das células.", "Quando minha atividade é reduzida, ocorre menor produção hepática de colesterol e aumento da expressão dos receptores de LDL nos hepatócitos.", "Sou a enzima-chave da síntese endógena de colesterol inibida pelas estatinas, como sinvastatina e atorvastatina."]}];
+const POINTS = [6,5,4,3,2,1];
+const MANUAL_CATS = ["Patologia","Hormônios","Sinais Clínicos","Marcadores Laboratoriais","Nutrientes, enzimas e substâncias"];
+const state = {
+  page:"home", mode:"study", filter:"Todos", exactLabel:"Todos", search:"",
+  studyCard:null, studyClue:0,
+  teams:[{name:"Equipe 1",score:0},{name:"Equipe 2",score:0}],
+  teamCount:2, activeTeam:0, card:null, clue:0, timer:30, timerId:null,
+  roundStarted:false, revealedAnswer:false, used:new Set(), tie:false, tieTeams:[], tieCard:null, tieClue:0, tieReady:false
+};
+
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
+function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),1800)}
+function nav(){
+ return `<header class="topbar"><div class="brand"><div class="brandmark">PERFIL</div><div><small>NUTRIÇÃO</small><small>Monitoria de NC2</small></div></div>
+ <nav class="nav">
+  <button class="${state.page==="home"?"active":""}" onclick="go('home')">Início</button>
+  <button class="${state.page==="game"?"active":""}" onclick="go('game')">Modo Jogo</button>
+  <button class="${state.page==="study"?"active":""}" onclick="go('study')">Modo Estudo</button>
+  <button class="${state.page==="deck"?"active":""}" onclick="go('deck')">Baralho</button>
+  <button class="${state.page==="rules"?"active":""}" onclick="go('rules')">Regras</button>
+  <button class="${state.page==="credits"?"active":""}" onclick="go('credits')">Créditos</button>
+ </nav></header>`;
+}
+function shell(content){
+ document.getElementById("app").innerHTML=nav()+`<main>${content}</main><div class="footer"><b>Perfil Nutrição</b> · Monitoria de Nutrição Clínica II · UFF<br>Autoria: Beatriz Spena Machado · Versão digital desenvolvida com assistência do ChatGPT (OpenAI) · 2026</div>`;
+}
+function go(page){state.page=page; if(page==="game" && !state.card) resetGame(); render()}
+function render(){
+ if(state.page==="home") renderHome();
+ if(state.page==="deck") renderDeck();
+ if(state.page==="study") renderStudy();
+ if(state.page==="rules") renderRules();
+ if(state.page==="credits") renderCredits();
+ if(state.page==="game") renderGame();
+}
+function renderHome(){
+ const counts={}; MANUAL_CATS.forEach(c=>counts[c]=CARDS.filter(x=>x.macro===c).length);
+ shell(`<section class="hero">
+   <div><div class="kicker">Quantas dicas você precisa?</div><h1>PERFIL</h1><h2>NUTRIÇÃO</h2>
+   <p>Uma versão digital da atividade de monitoria de Nutrição Clínica II, com o baralho completo, regras da partida, cronômetro de 30 segundos, pontuação por equipe e modo de estudo.</p>
+   <div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:22px"><button class="btn red big" onclick="go('game')">Começar partida</button><button class="btn big" onclick="go('study')">Estudar cartas</button></div></div>
+   <div class="hero-art"><div class="card-stack"><div class="mini-card"><div class="mc-top">PATOLOGIA</div><div class="mc-title">?</div><div class="dots"><i></i><i></i><i></i></div></div><div class="mini-card"><div class="mc-top">HORMÔNIO</div><div class="mc-title">?</div><div class="dots"><i></i><i></i><i></i></div></div><div class="mini-card"><div class="mc-top">NUTRIENTE</div><div class="mc-title">?</div><div class="dots"><i></i><i></i><i></i></div></div></div></div>
+ </section>
+ <div class="stats"><div class="stat"><b>${CARDS.length}</b><span>cartas no baralho</span></div><div class="stat"><b>5</b><span>categorias do manual</span></div><div class="stat"><b>6 → 1</b><span>pontos por pista</span></div><div class="stat"><b>30 s</b><span>para discussão</span></div></div>
+ <div class="section-title"><div><h2>Escolha como usar</h2><p>Feito para projetar em sala ou estudar individualmente.</p></div></div>
+ <div class="mode-grid">
+  <button class="mode" onclick="go('game')"><div class="icon">▶</div><h3>Modo Jogo</h3><p>Rodadas, 30 segundos, passagem da vez, pontuação e desempate.</p></button>
+  <button class="mode" onclick="go('study')"><div class="icon">▣</div><h3>Modo Estudo</h3><p>Revele as pistas progressivamente e consulte as respostas.</p></button>
+  <button class="mode" onclick="go('deck')"><div class="icon">▤</div><h3>Baralho completo</h3><p>Pesquise, filtre por categoria e abra qualquer uma das cartas.</p></button>
+  <button class="mode" onclick="go('rules')"><div class="icon">?</div><h3>Como jogar</h3><p>Regras do manual organizadas em uma tela para o monitor.</p></button>
+ </div>
+ <div class="section-title"><div><h2>Baralho por categoria</h2></div></div>
+ <div class="stats">${MANUAL_CATS.map(c=>`<div class="stat"><b>${counts[c]}</b><span>${c}</span></div>`).join("")}</div>`);
+}
+function filteredCards(){
+ return CARDS.filter(c=>{
+   const okMacro=state.filter==="Todos"||c.macro===state.filter;
+   const okLabel=state.exactLabel==="Todos"||c.label===state.exactLabel;
+   const q=state.search.toLowerCase();
+   const okQ=!q||c.name.toLowerCase().includes(q)||c.clues.some(x=>x.toLowerCase().includes(q));
+   return okMacro&&okLabel&&okQ;
+ });
+}
+function cardTile(c, click="openStudy"){
+ return `<article class="deck-card" onclick="${click}(${c.id})"><span class="badge">${esc(c.label)}</span><h3>${esc(c.name)}</h3><div class="macro">${esc(c.macro)}</div><div class="clue-count">6 pistas · ${POINTS.join(" · ")} pontos</div></article>`;
+}
+function filters(){
+ const labels=["Todos",...new Set(CARDS.map(c=>c.label))];
+ return `<div class="filters">${MANUAL_CATS.map(c=>`<button class="filter ${state.filter===c?"active":""}" onclick="setFilter('${c.replace(/'/g,"\\'")}')">${c}</button>`).join("")}</div>
+ <div class="filters" style="margin-top:8px">${labels.map(c=>`<button class="filter ${state.exactLabel===c?"active":""}" onclick="setLabel('${c.replace(/'/g,"\\'")}')">${c}</button>`).join("")}</div>`;
+}
+function setFilter(x){state.filter=x;renderDeck()}
+function setLabel(x){state.exactLabel=x;renderDeck()}
+function renderDeck(){
+ const arr=filteredCards();
+ shell(`<div class="page-head"><div><h1>Baralho completo</h1><p>${arr.length} carta(s) encontradas · o conteúdo foi mantido conforme o PDF.</p></div><button class="btn" onclick="shuffleStudy()">Sortear para estudar</button></div>
+ <div class="toolbar"><input class="search" placeholder="Pesquisar conceito ou pista..." value="${esc(state.search)}" oninput="state.search=this.value;renderDeck()"></div>
+ ${filters()}
+ <div class="card-grid" style="margin-top:18px">${arr.length?arr.map(c=>cardTile(c)).join(""):`<div class="empty" style="grid-column:1/-1">Nenhuma carta encontrada.</div>`}</div>`);
+}
+function openStudy(id){state.page="study";state.studyCard=CARDS.find(c=>c.id===id);state.studyClue=0;renderStudy()}
+function shuffleStudy(){const arr=filteredCards();if(!arr.length)return;openStudy(arr[Math.floor(Math.random()*arr.length)].id)}
+function renderStudy(){
+ if(state.studyCard){
+  const c=state.studyCard, n=state.studyClue;
+  shell(`<div class="page-head"><div><h1>Modo Estudo</h1><p>Revelação progressiva das pistas.</p></div><button class="btn" onclick="state.studyCard=null;renderStudy()">Voltar ao baralho</button></div>
+  <div class="game-card"><div class="game-top"><div><div class="game-category">${esc(c.label)}</div><span class="current-team">${esc(c.macro)}</span></div><div class="points">${n>0?POINTS[n-1]:"6"} pts</div></div>
+   <div class="clue-area">${n===0?`<div class="hidden-message"><b>Comece pela 1ª pista.</b><br>Não olhe a resposta antes de tentar.</div>`:`<div class="clue-number">Pista ${n} · ${POINTS[n-1]} pontos</div><div class="clue-text">${esc(c.clues[n-1])}</div>`}
+   <div class="game-actions">${n<6?`<button class="btn primary big" onclick="revealStudy()">Revelar ${n===0?"1ª":"próxima"} pista</button>`:""}<button class="btn big" onclick="revealStudyAnswer()">Revelar resposta</button><button class="btn ghost" onclick="shuffleStudy()">Outra carta</button></div>
+   <div id="study-answer"></div></div></div>`);
+ } else {
+  shell(`<div class="page-head"><div><h1>Modo Estudo</h1><p>Escolha uma carta ou faça um sorteio aleatório.</p></div><button class="btn red" onclick="shuffleStudy()">Sortear carta</button></div>
+  <div class="toolbar"><input class="search" placeholder="Pesquisar..." value="${esc(state.search)}" oninput="state.search=this.value;renderStudy()"></div>
+  ${filters()}<div class="card-grid" style="margin-top:18px">${filteredCards().map(c=>cardTile(c)).join("")}</div>`);
+ }
+}
+function revealStudy(){if(state.studyClue<6){state.studyClue++;renderStudy()}}
+function revealStudyAnswer(){
+ const c=state.studyCard;
+ const el=document.getElementById("study-answer");
+ if(el)el.innerHTML=`<div class="answer-box"><small>Resposta</small><strong>${esc(c.name)}</strong><div style="margin-top:8px;color:#ccc;font-size:13px">Categoria original: ${esc(c.label)}</div></div>`;
+}
+function resetGame(){
+ clearInterval(state.timerId);state.timerId=null;state.teams=[{name:"Equipe 1",score:0},{name:"Equipe 2",score:0}];state.teamCount=2;state.activeTeam=0;state.card=null;state.clue=0;state.timer=30;state.roundStarted=false;state.revealedAnswer=false;state.used=new Set();state.tie=false;state.tieTeams=[];state.tieCard=null;state.tieClue=0;state.tieReady=false;
+}
+function renderGame(){
+ if(!state.card){
+  shell(`<div class="page-head"><div><h1>Modo Jogo</h1><p>Configuração rápida para o monitor.</p></div><button class="btn" onclick="resetGame();renderGame()">Reiniciar</button></div>
+  <div class="panel"><h3>Antes de começar</h3><p>O manual estabelece equipes de <b>6 participantes</b>, um porta-voz por equipe e o monitor como mediador. Configure apenas os nomes das equipes abaixo.</p>
+   <div class="field" style="max-width:260px"><label>Número de equipes</label><select id="teamCount" onchange="setTeamCount(this.value)">${[2,3,4,5,6,7,8].map(n=>`<option ${state.teamCount==n?"selected":""}>${n}</option>`).join("")}</select></div>
+   <div class="team-inputs">${state.teams.map((t,i)=>`<input class="search" style="min-width:0" value="${esc(t.name)}" oninput="state.teams[${i}].name=this.value" placeholder="Equipe ${i+1}">`).join("")}</div>
+   <div style="margin-top:20px;display:flex;gap:9px;flex-wrap:wrap"><button class="btn red big" onclick="startRound()">Sortear primeira carta</button><button class="btn" onclick="showRules()">Ver regras antes de jogar</button></div>
+  </div>`);
+  return;
+ }
+ const c=state.card, clue=state.clue, pts=clue<6?POINTS[clue]:1;
+ shell(`<div class="page-head"><div><h1>Modo Jogo</h1><p>Rodada ${state.roundStarted?"em andamento":"pronta"} · ${state.used.size} carta(s) já sorteada(s).</p></div><div><button class="btn" onclick="newRound()">Nova carta</button> <button class="btn" onclick="resetGame();renderGame()">Reiniciar partida</button></div></div>
+ <div class="game-shell"><div class="game-main"><div class="game-card">
+   <div class="game-top"><div><div class="game-category">A carta da vez é uma ${esc(c.label)}</div><span class="current-team">Vez: ${esc(state.teams[state.activeTeam].name)}</span></div><div class="points">${clue<6?POINTS[clue]:"—"} pts</div></div>
+   <div class="clue-area">${clue===0?`<div class="hidden-message"><b>1ª pista: 6 pontos</b><br>Leia a pista para a equipe e inicie os 30 segundos.</div>`:`<div class="clue-number">Pista ${clue} · ${POINTS[clue-1]} pontos</div><div class="clue-text">${esc(c.clues[clue-1])}</div>`}
+    ${state.timerId?`<div class="timer ${state.timer<=5?"warn":""}">${state.timer}s</div>`:`<div class="timer">${state.timer}s</div>`}
+    <div class="game-actions">
+      ${clue<6?`<button class="btn primary big" onclick="revealGameClue()">${clue===0?"Ler 1ª pista":"Ler próxima pista"}</button>`:""}
+      ${clue>0?`<button class="btn" onclick="startTimer()">Iniciar 30 s</button><button class="btn green" onclick="correct()">Acertou</button><button class="btn" onclick="wrong()">Errou / passou</button>`:""}
+      <button class="btn" onclick="revealGameAnswer()">Revelar resposta</button>
+    </div>
+    <div id="game-answer"></div>
+   </div></div>
+   <aside class="side"><div class="panel"><h3>Placar</h3>${state.teams.map((t,i)=>`<div class="team-row ${i===state.activeTeam?"active":""}"><span>${esc(t.name)}</span><span class="score">${t.score}</span></div>`).join("")}</div>
+   <div class="panel"><h3>Próxima ação</h3><p style="margin-top:0;color:#666">Se errar ou passar, a vez passa no sentido horário e a próxima pista é liberada.</p><button class="btn big" style="width:100%" onclick="newRound()">Sortear nova carta</button><button class="btn" style="width:100%;margin-top:8px" onclick="openTie()">Desempate</button></div>
+   </aside></div>`);
+}
+function setTeamCount(v){
+ state.teamCount=Number(v);
+ const old=state.teams.map(x=>x.name);
+ state.teams=Array.from({length:state.teamCount},(_,i)=>({name:old[i]||`Equipe ${i+1}`,score:0}));
+ renderGame();
+}
+function availableCards(){return CARDS.filter(c=>!state.used.has(c.id))}
+function startRound(){
+ const available=availableCards();
+ if(!available.length){toast("Todas as cartas já foram usadas.");return}
+ const c=available[Math.floor(Math.random()*available.length)];state.used.add(c.id);state.card=c;state.clue=0;state.activeTeam=0;state.roundStarted=true;state.revealedAnswer=false;state.timer=30;clearInterval(state.timerId);state.timerId=null;renderGame()
+}
+function newRound(){
+ const available=availableCards();
+ if(!available.length){toast("O baralho terminou.");return}
+ const c=available[Math.floor(Math.random()*available.length)];state.used.add(c.id);state.card=c;state.clue=0;state.revealedAnswer=false;state.timer=30;clearInterval(state.timerId);state.timerId=null;renderGame()
+}
+function revealGameClue(){
+ if(state.clue>=6)return;
+ state.clue++;
+ state.timer=30; clearInterval(state.timerId);state.timerId=null;renderGame();
+}
+function startTimer(){
+ clearInterval(state.timerId);state.timer=30;
+ state.timerId=setInterval(()=>{state.timer--;if(state.timer<=0){clearInterval(state.timerId);state.timerId=null;toast("Tempo esgotado!");}renderGame()},1000);
+ renderGame()
+}
+function stopTimer(){clearInterval(state.timerId);state.timerId=null}
+function correct(){
+ stopTimer(); const p=POINTS[state.clue-1]||1; state.teams[state.activeTeam].score+=p;
+ toast(`${state.teams[state.activeTeam].name} +${p} ponto(s)`);
+ renderGame();
+}
+function wrong(){
+ stopTimer();
+ if(state.clue<6){state.activeTeam=(state.activeTeam+1)%state.teams.length;state.clue++;state.timer=30;renderGame();toast("Vez transferida. Próxima pista liberada.");}
+ else{toast("Última pista. Revele a resposta e inicie nova rodada.");renderGame()}
+}
+function revealGameAnswer(){
+ const el=document.getElementById("game-answer");
+ if(el)el.innerHTML=`<div class="answer-box"><small>Resposta</small><strong>${esc(state.card.name)}</strong><div style="margin-top:8px;color:#ccc;font-size:13px">Categoria original: ${esc(state.card.label)}</div><div style="margin-top:12px;font-size:12px;color:#bbb">Após a resposta, o manual prevê breve contextualização teórica pelo monitor.</div></div>`;
+}
+function showRules(){state.page="rules";render()}
+function openTie(){
+ const tied=state.teams.filter(t=>t.score===Math.max(...state.teams.map(x=>x.score)));
+ if(tied.length<2){toast("É necessário haver empate entre pelo menos 2 equipes.");return}
+ state.tie=true;state.tieTeams=tied.map(t=>state.teams.indexOf(t));state.tieCard=null;state.tieClue=0;state.tieReady=false;
+ showTieModal()
+}
+function showTieModal(){
+ const back=document.getElementById("modalBack"), modal=document.getElementById("modal");
+ if(!state.tieCard){
+  const arr=CARDS.filter(c=>!state.used.has(c.id)); if(!arr.length){modal.innerHTML="<h2>Desempate</h2><p>Não há cartas inéditas restantes.</p><button class='btn' onclick='closeModal()'>Fechar</button>";back.classList.add("show");return}
+  state.tieCard=arr[Math.floor(Math.random()*arr.length)];state.used.add(state.tieCard.id);state.tieClue=0;state.tieReady=false;
+ }
+ const c=state.tieCard;
+ modal.innerHTML=`<h2>Desempate</h2><p><b>Equipes empatadas:</b> ${state.tieTeams.map(i=>esc(state.teams[i].name)).join(", ")}</p>
+ <div class="badge">${esc(c.label)}</div><div style="margin:20px 0">${state.tieClue<3?`<div style="font:700 25px Georgia;line-height:1.25">${state.tieClue===0?"Pronto para a 1ª pista.":esc(c.clues[state.tieClue-1])}</div>`:`<div style="font:700 25px Georgia;line-height:1.25">${esc(c.clues[2])}</div>`}</div>
+ ${!state.tieReady&&state.tieClue<3?`<button class="btn primary" onclick="tieNext()">Ler ${state.tieClue+1}ª pista</button>`:""}
+ ${state.tieClue===3&&!state.tieReady?`<button class="btn red big" onclick="tieReady()">1, 2, 3, valendo!</button>`:""}
+ ${state.tieReady?`<h3>Quem levantou a mão primeiro?</h3><div class="tie-grid">${state.tieTeams.map(i=>`<button class="btn big" onclick="tieAnswer(${i})">${esc(state.teams[i].name)}</button>`).join("")}</div>`:""}
+ <div style="margin-top:18px"><button class="btn" onclick="closeModal()">Fechar</button></div>`;
+ back.classList.add("show")
+}
+function tieNext(){if(state.tieClue<3){state.tieClue++;showTieModal()}}
+function tieReady(){state.tieReady=true;showTieModal();toast("Valendo!")}
+function tieAnswer(i){
+ const guess=prompt(`A equipe ${state.teams[i].name} acertou? Digite SIM ou NÃO.`,"SIM");
+ if((guess||"").trim().toUpperCase()==="SIM"){toast(`${state.teams[i].name} venceu o desempate!`);closeModal();state.teams[i].score+=1;renderGame()}
+ else{state.tieTeams=state.tieTeams.filter(x=>x!==i);if(state.tieTeams.length===1){toast(`${state.teams[state.tieTeams[0]].name} vence por eliminação.`);closeModal();}else{state.tieReady=true;showTieModal()}}
+}
+function closeModal(){document.getElementById("modalBack").classList.remove("show")}
+function renderCredits(){
+ shell(`<section class="credits-hero">
+   <div class="kicker">Créditos e autoria</div>
+   <h1 class="credits-mark">PERFIL NUTRIÇÃO</h1>
+   <p style="font-size:18px;line-height:1.55;max-width:780px;margin:0">Cartas e Adivinhação: Desvendando a Nutrição Clínica</p>
+   <div class="credit-grid">
+     <div class="panel">
+       <div class="credit-line"><small>Autoria</small><strong>Beatriz Spena Machado</strong></div>
+       <div class="credit-line"><small>Instituição</small><strong>Universidade Federal Fluminense — UFF</strong></div>
+       <div class="credit-line"><small>Atividade</small><strong>Monitoria de Nutrição Clínica II</strong></div>
+       <div class="credit-line"><small>Ano</small><strong>2026</strong></div>
+     </div>
+     <div class="panel">
+       <div class="credit-line"><small>Desenvolvimento da versão digital</small><strong>Beatriz Spena Machado, com assistência do ChatGPT (OpenAI)</strong></div>
+       <div class="credit-line"><small>Base do material</small><strong>Baralho e manual da atividade de monitoria</strong></div>
+       <div class="credit-note"><b>Uso de inteligência artificial:</b> o ChatGPT (OpenAI) foi utilizado como ferramenta de apoio para organização, programação e desenvolvimento da interface digital. A seleção, organização, revisão e responsabilidade pelo conteúdo pedagógico são da autora.</div>
+     </div>
+   </div>
+ </section>`);
+}
+function renderRules(){
+ shell(`<div class="page-head"><div><h1>Como jogar</h1><p>Regras reproduzidas e organizadas a partir do manual fornecido.</p></div><button class="btn" onclick="go('game')">Ir para o jogo</button></div>
+ <div class="rules">
+ <section class="panel"><h3>Objetivo</h3><p>Descobrir corretamente o conceito apresentado em cada carta utilizando o menor número possível de pistas. A equipe que acumular a maior pontuação ao final da partida é a vencedora.</p>
+ <h3>Categorias</h3><ol><li>Patologia</li><li>Hormônios</li><li>Sinais Clínicos</li><li>Marcadores Laboratoriais</li><li>Nutrientes, enzimas e substâncias</li></ol></section>
+ <section class="panel"><h3>Organização</h3><p><b>Equipes:</b> a turma é dividida em equipes de 6 participantes.</p><p><b>Representante:</b> cada equipe escolhe um porta-voz para apresentar a resposta oficial.</p><p><b>Mediador:</b> o monitor sorteia e lê as cartas, controla o tempo, valida os palpites e gerencia a pontuação.</p></section>
+ <section class="panel"><h3>Início da rodada</h3><ol><li>O mediador sorteia uma carta e anuncia apenas a categoria.</li><li>O texto da carta e a resposta permanecem ocultos.</li><li>O mediador lê a 1ª pista, valendo 6 pontos.</li><li>A equipe tem até 30 segundos para discutir.</li><li>O porta-voz responde ou passa.</li></ol></section>
+ <section class="panel"><h3>Se acertar</h3><p>A equipe recebe a pontuação correspondente à pista atual e a rodada termina. O mediador faz uma breve contextualização teórica e sorteia uma nova carta.</p>
+ <h3>Se errar ou passar</h3><p>O direito de resposta passa para a equipe seguinte, em sentido horário, e o mediador lê a pista subsequente.</p></section>
+ <section class="panel"><h3>Pontuação</h3><table class="score-table"><tr><th>Pista</th><th>Pontos</th></tr>${POINTS.map((p,i)=>`<tr><td>${i+1}ª pista</td><td><b>${p}</b></td></tr>`).join("")}</table></section>
+ <section class="panel"><h3>Esgotamento</h3><p>O processo segue até uma equipe acertar ou até a 6ª pista. Se ninguém acertar, o mediador revela a resposta, explica brevemente o mecanismo clínico/fisiopatológico e inicia nova rodada.</p></section>
+ <section class="panel" style="grid-column:1/-1"><h3>Desempate</h3><ol><li>O mediador sorteia uma carta inédita e lê as 3 primeiras pistas.</li><li>Ao concluir a 3ª pista, diz: <b>“1, 2, 3, valendo!”</b></li><li>Os representantes levantam a mão; quem levantar primeiro ganha o direito de resposta.</li><li>Se acertar, é campeã.</li><li>Se errar, é eliminada do desempate e a oportunidade passa às demais.</li><li>Se todas errarem, repete-se com nova carta até haver vencedora.</li></ol></section>
+ </div>`);
+}
+render();
+</script>
+</body>
+</html>
